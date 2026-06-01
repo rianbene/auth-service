@@ -29,14 +29,17 @@ public class ApplicationConfig {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
     }
 
-    // define a estratégia de criptografia de senha usando BCrypt
+    /**
+     * Define a estratégia de criptografia de senha usando BCrypt
+     */
     @Bean 
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     /**
-     * Junta o UserDetailsService e o PasswordEncoder para formar o provedor de autenticação.
+     * Junta o UserDetailsService e o PasswordEncoder para formar o provedor de autenticação. 
+     * É utilizado no SecurityConfig e acessado sem import pela anotação @Bean.
      */
     @Bean
     public AuthenticationProvider authenticationProvider() {
