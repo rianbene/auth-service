@@ -1,4 +1,4 @@
-package com.ucsal.auth_service.security;
+package com.ucsal.auth_service.service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
