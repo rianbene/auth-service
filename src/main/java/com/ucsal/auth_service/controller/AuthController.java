@@ -12,7 +12,7 @@ import com.ucsal.auth_service.controller.dto.LoginRequestDTO;
 import com.ucsal.auth_service.controller.dto.RegisterRequestDTO;
 import com.ucsal.auth_service.model.Usuario;
 import com.ucsal.auth_service.repository.UsuarioRepository;
-import com.ucsal.auth_service.security.TokenService;
+import com.ucsal.auth_service.service.TokenService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,15 +40,16 @@ public class AuthController {
     }
     
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterRequestDTO data) {
+    public ResponseEntity<Long> register(@RequestBody RegisterRequestDTO data) {
         // se ja tiver esse login, impede o registro
         if (this.repository.findByLogin(data.login()).isPresent()){
             return ResponseEntity.badRequest().build();
         }
+        // se n tiver o login, adiciona o usuario e senha no banco e devolve o id gerado
         String encryptedPassword = passwordEncoder.encode(data.senha());
         Usuario newUser = new Usuario(null, data.login(), encryptedPassword, data.role());
         this.repository.save(newUser);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(newUser.getId());
     }
     
 }
