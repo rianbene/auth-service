@@ -1,0 +1,13 @@
+services:
+  auth-db:
+    image: postgres:16
+    container_name: clinica-auth-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: clinica_auth_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - clinica-auth-db-data:/var/lib/postgresql/data
+    
