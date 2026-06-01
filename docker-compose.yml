@@ -2,12 +2,26 @@ services:
   auth-db:
     image: postgres:16
     container_name: clinica-auth-db
+    restart: unless-stopped
+    # Configurações de acesso e criação automática do banco
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: auth_user
+      POSTGRES_PASSWORD: auth_password
       POSTGRES_DB: clinica_auth_db
+    # Mapeamento de portas (Esquerda: Sua máquina | Direita: Contêiner)
+    # Usamos 5434 para não conflitar com outros bancos na porta padrão 5432
     ports:
       - "5434:5432"
+    # Persistência de dados para não perder os usuários quando o contêiner reiniciar
     volumes:
       - clinica-auth-db-data:/var/lib/postgresql/data
-    
+    # Healthcheck: Ensina o Docker a verificar se o banco de dados já está pronto
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U auth_user -d clinica_auth_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+# Declaração do volume nomeado
+volumes:
+  clinica-auth-db-data:
+    name: clinica-auth-db-data
