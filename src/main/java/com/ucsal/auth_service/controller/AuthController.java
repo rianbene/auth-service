@@ -1,5 +1,6 @@
 package com.ucsal.auth_service.controller;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +16,9 @@ import com.ucsal.auth_service.repository.UsuarioRepository;
 import com.ucsal.auth_service.service.TokenService;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -52,4 +56,11 @@ public class AuthController {
         return ResponseEntity.ok(newUser.getId());
     }
     
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        // SAGA: metodo compensatorio acionado quando há falha na criação de um profissional
+        // e êxito na criação de um usuario
+        this.repository.deleteById(id);;
+        return ResponseEntity.noContent().build();
+    }
 }
